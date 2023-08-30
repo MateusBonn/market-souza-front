@@ -1,0 +1,15 @@
+.page_container{
+    display: grid;
+    display: flex;
+    grid-template-columns: repeat(1, 1fr);
+    border: 1px solid #ccc; /* Adicione borda 3D */
+    padding: 10px;
+    padding-right: 20px; /* Espaçamento à direita */
+    justify-content: flex-end; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    align-items: center; /* Centraliza verticalmente os elementos dentro da div */
+    margin-right: px; /* Espaçamento entre o input e o próximo componente */
+  }
+  
+
+  
