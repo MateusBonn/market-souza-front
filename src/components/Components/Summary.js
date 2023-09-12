@@ -1,8 +1,12 @@
 import React from 'react';
 import styles from './Summary.module.css';
 
-function Summary({ selecionados, calculateTotalValue }) {
-    const handleConcluirVenda = async () => {
+function Summary({ selecionados }) {
+  const calculateTotalValue = () => {
+    const total = selecionados.reduce((acc, item) => acc + parseFloat(item.value), 0);
+    return total.toFixed(2); // Arredonda para 2 casas decimais
+  };  
+  const handleConcluirVenda = async () => {
         // Enviar a lista de objetos para o endpoint http://localhost:5000/sold
         try {
           const response = await fetch('http://localhost:5000/sold', {

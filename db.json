@@ -1,15 +1,11 @@
 {
-  "parameters": [
-    {
-      "id": 252,
-      "name": "Teste"
-    }
-  ],
   "Storage": [
     {
-      "id": 222,
-      "name": "Produtos açougue",
-      "value": 4.5
+      "nameProduct": "Example Product",
+      "codeProduct": "ABC123",
+      "productQuantityBought": 10,
+      "priceProductBought": 50.99,
+      "priceProductToSell": 69.99
     },
     {
       "id": 252,

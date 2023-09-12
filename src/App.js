@@ -1,10 +1,10 @@
-import Login from './components/pages/Login';
-import PosLogin from './components/pages/PosLogin';
+import PosLogin from "./components/pages/PosLogin";
+
 
 function App() {
   return (
     <>
-    <Login />
+    <PosLogin />
     </>
 
   );

@@ -13,7 +13,7 @@ function Sells() {
 
   useEffect(() => {
     if (termo) {
-      fetch(`http://localhost:5000/Storage?id_like=${termo}`)
+      fetch(`http://localhost:5000/Storage?codeProduct_like=${termo}`)
         .then(response => response.json())
         .then(data => {
           setPrevisoes(data);
@@ -60,11 +60,6 @@ function Sells() {
     setSelectedItem(null);
   };
 
-  const calculateTotalValue = () => {
-    const total = selecionados.reduce((acc, item) => acc + parseFloat(item.value), 0);
-    return total.toFixed(2); // Arredonda para 2 casas decimais
-  };
-
   return (
     <div >
       <div className={styles.page_container}>
@@ -78,7 +73,7 @@ function Sells() {
       />
       </div>
       <ItemList previsoes={previsoes} selecionados={selecionados} setSelectedItem={setSelectedItem} setShowValueModal={setShowValueModal} />
-      <Summary selecionados={selecionados} calculateTotalValue={calculateTotalValue} />
+      <Summary selecionados={selecionados} />
       {showValueModal && selectedItem && (
         <ValueModal
           initialValue={selectedItem.value}

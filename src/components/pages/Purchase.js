@@ -1,91 +1,100 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useContext } from 'react';
+import Cookies from 'universal-cookie';
+
+import { AuthContext } from "../../contexts/Auth"
+import {api ,sendStorage, recoveredToken } from '../services/api'
 
 function Purchase() {
-    const [products, setProducts] = useState([]);
-  const [code, setCode] = useState('');
-  const [productName, setProductName] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [purchasePrice, setPurchasePrice] = useState('');
-  const [sellingPrice, setSellingPrice] = useState('');
+  const { logout } = useContext(AuthContext);
+  const [products, setProducts] = useState([]);
+  const [codeProduct, setCodeProduct] = useState('');
+  const [nameProduct, setNameProduct] = useState('');
+  const [productQuantityBought, setProductQuantityBought] = useState('');
+  const [priceProductBought, setPriceProductBought] = useState('');
+  const [priceProductToSell, setPriceProductToSell] = useState('');
+  var cookie = new Cookies();
+
+
+  const newProduct = {
+    codeProduct,
+    nameProduct,
+    productQuantityBought,
+    priceProductBought,
+    priceProductToSell,
+  };
+
+  const addProductSend = async (e) => {
+    e.preventDefault();
+    setProducts([...products, newProduct])
+  }
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    if (!code || !productName || !quantity || !purchasePrice || !sellingPrice) {
-      alert('Por favor, preencha todos os campos.');
-      return;
-    }
-
-    const newProduct = {
-      code,
-      productName,
-      quantity,
-      purchasePrice,
-      sellingPrice,
-    };
-    
     try {
-        const response = await fetch('http://localhost:8081//supermercado-souza/product/add-product', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newProduct),
-        });
-    
-        if (response.ok) {
-          setProducts([...products, newProduct]);
-          clearForm();
-        } else {
-          alert('Ocorreu um erro ao enviar o produto.');
-        }
-      } catch (error) {
-        console.error('Erro ao enviar o produto:', error);
-        alert('Ocorreu um erro ao enviar o produto.');
+      const response = await sendStorage(products);
+
+      if(response.status === 201){
+        console.log('Produto adicionado com sucesso!');
       }
+      if(response.status === 401) {
+        try {
+          const responseToken = recoveredToken(cookie.get("refreshToken"))
+          if(responseToken.status === 200){
+            console.log('Tokem recuperado');
+            const loggedUser = responseToken.data.login;
+            const token = responseToken.data.token;
+            cookie.set("firstName",loggedUser.firstName)
+            cookie.set("role",loggedUser.role)
 
-    setProducts([...products, newProduct]);
-    clearForm();
+            cookie.set("accessToken",token.accessToken)
+            cookie.set("refreshToken", token.refreshToken)
+            api.defaults.headers.Authorization = `Bearer ${token.accessToken}`
+          }
+        } catch(error) {
+          console.error('Erro ao recuperar o token', error);
+          alert('Ocorreu um erro ao recuperar o token.', error);
+          logout()
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao enviar o produto:', error);
+      alert('Ocorreu um erro ao enviar o produto.', error);
+    }
   };
 
-  const clearForm = () => {
-    setCode('');
-    setProductName('');
-    setQuantity('');
-    setPurchasePrice('');
-    setSellingPrice('');
-  };
 
   return (
     <div>
       <h2>Cadastro de Produtos</h2>
-      <form onSubmit={handleFormSubmit}>
+      <form onSubmit={addProductSend}>
         <label>
           Código:
-          <input type="text" value={code} onChange={(e) => setCode(e.target.value)} />
+          <input type="text" value={codeProduct} onChange={(e) => setCodeProduct(e.target.value)} required/>
         </label>
         <br />
         <label>
           Nome do Produto:
           <input
             type="text"
-            value={productName}
-            onChange={(e) => setProductName(e.target.value)}
+            value={nameProduct}
+            onChange={(e) => setNameProduct(e.target.value)}
+            required
           />
         </label>
         <br />
         <label>
           Quantidade:
-          <input type="number" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
+          <input type="number" value={productQuantityBought} onChange={(e) => setProductQuantityBought(e.target.value)} required/>
         </label>
         <br />
         <label>
           Preço de Compra:
           <input
             type="number"
-            value={purchasePrice}
-            onChange={(e) => setPurchasePrice(e.target.value)}
+            value={priceProductBought}
+            onChange={(e) => setPriceProductBought(e.target.value)}
+            required
           />
         </label>
         <br />
@@ -93,8 +102,9 @@ function Purchase() {
           Preço de Venda:
           <input
             type="number"
-            value={sellingPrice}
-            onChange={(e) => setSellingPrice(e.target.value)}
+            value={priceProductToSell}
+            onChange={(e) => setPriceProductToSell(e.target.value)}
+            required
           />
         </label>
         <br />
@@ -105,12 +115,14 @@ function Purchase() {
       <ul>
         {products.map((product, index) => (
           <li key={index}>
-            Código: {product.code}, Nome: {product.productName}, Quantidade: {product.quantity}, 
-            Preço de Compra: {product.purchasePrice}, Preço de Venda: {product.sellingPrice}
+            Código: {product.codeProduct}, Nome: {product.nameProduct}, Quantidade: {product.productQuantityBought}, 
+            Preço de Compra: {product.priceProductBought}, Preço de Venda: {product.priceProductToSell}
           </li>
         ))}
       </ul>
+      <button onClick={handleFormSubmit}>Enviar</button>
     </div>
   );
-};
-export default Purchase
+}
+
+export default Purchase;
