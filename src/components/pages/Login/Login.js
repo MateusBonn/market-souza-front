@@ -2,8 +2,6 @@ import React, { useState, useContext } from "react"
 import { AuthContext } from "../../../contexts/Auth";
 
 import './Login.css';
-import Cookies from "universal-cookie";
-
 
 function Login() {
     const {authenticated, login } = useContext(AuthContext)

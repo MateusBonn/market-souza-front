@@ -1,6 +1,5 @@
 import React, {createContext, useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom"
-import Cookies from "universal-cookie";
 import {api, createSession} from "../components/services/api"
 
 export const AuthContext = createContext();
@@ -28,13 +27,12 @@ export const AuthProvider = ({ children }) => {
             const loggedUser = response.data.login;
             const token = response.data.token;
             console.log("Logged user login:", loggedUser);
-            
-            var cookie = new Cookies();
-            cookie.set("firstName",loggedUser.firstName)
-            cookie.set("role",loggedUser.role)
 
-            cookie.set("accessToken",token.accessToken)
-            cookie.set("refreshToken", token.refreshToken)
+            localStorage.setItem('login', JSON.stringify(loggedUser))
+            localStorage.setItem('token', JSON.stringify(token))
+
+            console.log('Entrada', JSON.parse(localStorage.getItem('token')).accessToken)
+
 
             api.defaults.headers.Authorization = `Bearer ${token.accessToken}`
 
@@ -48,16 +46,11 @@ export const AuthProvider = ({ children }) => {
     }
  
     const logout = () => {
-      console.log("Logout")
-      var cookie = new Cookies();
-      cookie.remove("firstName")
-      cookie.remove("role")
-
-      cookie.remove("accessToken")
-      cookie.remove("refreshToken")
-      api.defaults.headers.Authorization = null;
-      setUser(null);
-      navigate("/")
+        localStorage.removeItem('login')
+        localStorage.removeItem('token')
+        api.defaults.headers.Authorization = null;
+        setUser(null);
+        navigate("/")
     };
 
     return (

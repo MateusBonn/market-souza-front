@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-import Cookies from 'universal-cookie';
 
 import { AuthContext } from "../../contexts/Auth"
 import {api ,sendStorage, recoveredToken } from '../services/api'
@@ -12,7 +11,6 @@ function Purchase() {
   const [productQuantityBought, setProductQuantityBought] = useState('');
   const [priceProductBought, setPriceProductBought] = useState('');
   const [priceProductToSell, setPriceProductToSell] = useState('');
-  var cookie = new Cookies();
 
 
   const newProduct = {
@@ -32,24 +30,37 @@ function Purchase() {
     e.preventDefault();
 
     try {
-      const response = await sendStorage(products);
+      var response = await sendStorage(products);
 
       if(response.status === 201){
         console.log('Produto adicionado com sucesso!');
       }
-      if(response.status === 401) {
+    
+    } catch (auth) {
+
+      if(auth.response.status === 401) {
+
         try {
-          const responseToken = recoveredToken(cookie.get("refreshToken"))
+          const responseToken = await recoveredToken(JSON.parse(localStorage.getItem('token')).refreshToken)
+          console.log('Tokem recuperado', responseToken.status);
           if(responseToken.status === 200){
+
             console.log('Tokem recuperado');
             const loggedUser = responseToken.data.login;
             const token = responseToken.data.token;
-            cookie.set("firstName",loggedUser.firstName)
-            cookie.set("role",loggedUser.role)
+            
+            localStorage.setItem('login', JSON.stringify(loggedUser))
+            localStorage.setItem('token', JSON.stringify(token))
 
-            cookie.set("accessToken",token.accessToken)
-            cookie.set("refreshToken", token.refreshToken)
+            console.log('Atual', JSON.parse(localStorage.getItem('token')).accessToken)
+
             api.defaults.headers.Authorization = `Bearer ${token.accessToken}`
+
+            response = await sendStorage(products);
+
+            if(response.status === 201){
+              console.log('Produto adicionado com sucesso!');
+            }
           }
         } catch(error) {
           console.error('Erro ao recuperar o token', error);
@@ -57,11 +68,9 @@ function Purchase() {
           logout()
         }
       }
-    } catch (error) {
-      console.error('Erro ao enviar o produto:', error);
-      alert('Ocorreu um erro ao enviar o produto.', error);
     }
-  };
+  }
+
 
 
   return (
