@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react';
 
 import { AuthContext } from "../../contexts/Auth"
-import {api ,sendStorage, recoveredToken } from '../services/api'
+import {sendStorage, recoveredToken } from '../services/api'
+import Cookies from 'universal-cookie';
 
 function Purchase() {
   const { logout } = useContext(AuthContext);
@@ -41,32 +42,21 @@ function Purchase() {
       if(auth.response.status === 401) {
 
         try {
-          const responseToken = await recoveredToken(JSON.parse(localStorage.getItem('token')).refreshToken)
-          console.log('Tokem recuperado', responseToken.status);
-          if(responseToken.status === 200){
-
-            console.log('Tokem recuperado');
-            const loggedUser = responseToken.data.login;
-            const token = responseToken.data.token;
-            
-            localStorage.setItem('login', JSON.stringify(loggedUser))
-            localStorage.setItem('token', JSON.stringify(token))
-
-            console.log('Atual', JSON.parse(localStorage.getItem('token')).accessToken)
-
-            api.defaults.headers.Authorization = `Bearer ${token.accessToken}`
-
+          var cookie = new Cookies()
+          await recoveredToken(cookie.get('refreshToken'))
+          
+          
             response = await sendStorage(products);
 
             if(response.status === 201){
               console.log('Produto adicionado com sucesso!');
             }
-          }
         } catch(error) {
           console.error('Erro ao recuperar o token', error);
           alert('Ocorreu um erro ao recuperar o token.', error);
           logout()
         }
+
       }
     }
   }

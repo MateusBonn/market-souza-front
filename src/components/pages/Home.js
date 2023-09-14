@@ -1,10 +1,12 @@
 import { useContext } from "react"
 import { AuthContext } from "../../contexts/Auth"
+import Cookies from "universal-cookie";
 
 
 function Home() {
     const { logout } = useContext(AuthContext);
-    var firstName = JSON.parse(localStorage.getItem('login')).firstName
+    var cookie = new Cookies();
+    var firstName = cookie.get('user')
 
     const handleLogout = () => {
         logout();
