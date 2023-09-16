@@ -3,7 +3,7 @@ import styles from './Summary.module.css';
 
 function Summary({ selecionados }) {
   const calculateTotalValue = () => {
-    const total = selecionados.reduce((acc, item) => acc + parseFloat(item.value), 0);
+    const total = selecionados.reduce((acc, item) => acc + parseFloat(item.priceProduct), 0);
     return total.toFixed(2); // Arredonda para 2 casas decimais
   };  
   const handleConcluirVenda = async () => {

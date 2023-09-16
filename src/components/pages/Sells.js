@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {getProductByCode, getProductByName } from '../services/api'
 import ValueModal from '../../modals/ValueModal';
 import ItemList from '../Components/ItemList'
 import Summary from '../Components/Summary'
@@ -13,34 +14,35 @@ function Sells() {
 
   useEffect(() => {
     if (termo) {
-      fetch(`http://localhost:5000/Storage?codeProduct_like=${termo}`)
-        .then(response => response.json())
-        .then(data => {
-          setPrevisoes(data);
-        })
-        .catch(error => {
-          console.error('Erro ao buscar previsões:', error);
-        });
-    } else {
+          getProductByCode(termo)
+          .then((response) => {
+          console.log(response)
+            setPrevisoes(response.data)
+        }).catch((error) => {
+          getProductByName(termo)
+          .then((response) => {
+            console.log(response)
+              setPrevisoes(response.data)
+
+        })})
+    }else {
       setPrevisoes([]);
     }
   }, [termo]);
 
   const handleKeyPress = async event => {
     if (event.key === 'Enter') {
-      const itemSelecionado = previsoes.find(previsao => previsao.id.toString() === termo);
+      const itemSelecionado = previsoes.find(previsao => previsao.codeProduct === termo || previsao.nameProduct === termo);
       if (itemSelecionado) {
-        const response = await fetch(`http://localhost:5000/parameters?id_like=${termo}`);
-        const data = await response.json();
 
-        if (data.length > 0) {
+        if (itemSelecionado.priceProduct != null) {
           setSelectedItem(itemSelecionado);
           setShowValueModal(true);
         } else {
           const selectedItem = {
-            id: itemSelecionado.id,
-            name: itemSelecionado.name,
-            value: itemSelecionado.value
+            codeProduct: itemSelecionado.codeProduct,
+            nameProduct: itemSelecionado.nameProduct,
+            priceProduct: itemSelecionado.priceProduct
           };
           setSelecionados([...selecionados, selectedItem]);
         }
@@ -51,9 +53,9 @@ function Sells() {
 
   const handleModalConfirm = newValue => {
     const updatedItem = {
-      id: selectedItem.id,
-      name: selectedItem.name,
-      value: newValue
+      codeProduct: selectedItem.codeProduct,
+      nameProduct: selectedItem.nameProduct,
+      priceProduct: newValue
     };
     setSelecionados([...selecionados, updatedItem]);
     setShowValueModal(false);
@@ -76,7 +78,7 @@ function Sells() {
       <Summary selecionados={selecionados} />
       {showValueModal && selectedItem && (
         <ValueModal
-          initialValue={selectedItem.value}
+          initialValue={selectedItem.priceProduct}
           onConfirm={handleModalConfirm}
           onCancel={() => setShowValueModal(false)}
         />

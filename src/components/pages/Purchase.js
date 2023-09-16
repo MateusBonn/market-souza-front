@@ -5,6 +5,7 @@ import {sendStorage, recoveredToken } from '../services/api'
 import Cookies from 'universal-cookie';
 
 function Purchase() {
+  var cookie = new Cookies()
   const { logout } = useContext(AuthContext);
   const [products, setProducts] = useState([]);
   const [codeProduct, setCodeProduct] = useState('');
@@ -12,6 +13,9 @@ function Purchase() {
   const [productQuantityBought, setProductQuantityBought] = useState('');
   const [priceProductBought, setPriceProductBought] = useState('');
   const [priceProductToSell, setPriceProductToSell] = useState('');
+  const [username, setUsername] = useState('');
+
+
 
 
   const newProduct = {
@@ -20,10 +24,12 @@ function Purchase() {
     productQuantityBought,
     priceProductBought,
     priceProductToSell,
+    username
   };
 
   const addProductSend = async (e) => {
     e.preventDefault();
+    setUsername(cookie.get('user'))
     setProducts([...products, newProduct])
   }
 
@@ -42,7 +48,6 @@ function Purchase() {
       if(auth.response.status === 401) {
 
         try {
-          var cookie = new Cookies()
           await recoveredToken(cookie.get('refreshToken'))
           
           

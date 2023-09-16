@@ -8,11 +8,11 @@
       "priceProductToSell": 69.99
     },
     {
-      "id": 252,
+      "codeProduct": 252,
       "name": "Teste"
     },
     {
-      "id": "1",
+      "codeProduct": 1,
       "nomeProduto": "a",
       "quantidade": "1"
     },
