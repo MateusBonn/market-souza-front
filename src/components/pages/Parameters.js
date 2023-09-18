@@ -1,6 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+
+import { AuthContext } from "../../contexts/Auth"
+import {sendStorage, recoveredToken } from '../services/api'
+import Cookies from 'universal-cookie';
+
+
 
 function Parameters() {
+    const { logout } = useContext(AuthContext);
+    var cookie = new Cookies()
     const [codigo, setCodigo] = useState('');
     const [nomeProduto, setNomeProduto] = useState('');
   
@@ -13,41 +21,32 @@ function Parameters() {
       };
   
       try {
-        const responseParameters = await fetch('http://localhost:5000/parameters', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(formData)
-        });
+        var response = await sendStorage(formData);
   
-        if (responseParameters.ok) {
-          console.log('Dados enviados com sucesso!');
-          window.location.reload();
-        } else {
-          console.error('Erro ao enviar dados.');
+        if(response.status === 201){
+          console.log('Produto adicionado com sucesso!');
         }
-        
-        
-      // Envia os mesmos dados para o segundo endpoint
-      const responseCode = await fetch('http://localhost:8081//supermercado-souza/product/add-product', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-
-      if (responseCode.ok) {
-        console.log('Dados enviados com sucesso para o segundo endpoint!');
-        // Após o envio bem-sucedido, recarregue a página para limpar o formulário
-        window.location.reload();
-      } else {
-        console.error('Erro ao enviar dados para o segundo endpoint.');
-      }
-
-      } catch (error) {
-        console.error('Erro ao enviar dados:', error);
+      
+      } catch (auth) {
+  
+        if(auth.response.status === 401) {
+  
+          try {
+            await recoveredToken(cookie.get('refreshToken'))
+            
+            
+              response = await sendStorage(formData);
+  
+              if(response.status === 201){
+                console.log('Produto adicionado com sucesso!');
+              }
+          } catch(error) {
+            console.error('Erro ao recuperar o token', error);
+            alert('Ocorreu um erro ao recuperar o token.', error);
+            logout()
+          }
+  
+        }
       }
     };
   
