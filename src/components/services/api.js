@@ -3,7 +3,7 @@ import { setCookies } from "../UniversalFunctions/UniversalFunctions";
 
 
 export const api = axios.create ({
-    baseURL: "http://localhost:8081"
+    baseURL: "https://supermarket-souza-production.up.railway.app"
 })
 
 export const createSession = async(username, password) => {

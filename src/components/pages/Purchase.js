@@ -41,6 +41,7 @@ function Purchase() {
 
       if(response.status === 201){
         console.log('Produto adicionado com sucesso!');
+        setProducts([])
       }
     
     } catch (auth) {
