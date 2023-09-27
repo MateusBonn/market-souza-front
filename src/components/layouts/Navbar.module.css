@@ -23,3 +23,19 @@
 .item a:hover {
     color:blue
 }
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column; 
+        align-items: center;
+    }
+
+    .list {
+        margin-top: 1em;
+    }
+
+    .item {
+        margin-right: 0;
+        margin-bottom: 0.5em;
+    }
+}

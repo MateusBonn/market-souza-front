@@ -16,12 +16,11 @@ export const AuthProvider = ({ children }) => {
         try {
             
             const response = await createSession(username, password);
-            console.log("Login auth", response.data);
             await setCookies(response)
             setUser(response.data.login)
             navigate("/home")
         }catch(error){
-            alert("error.response.data.message", error);
+            alert(error);
             window.location.reload();
         }
        

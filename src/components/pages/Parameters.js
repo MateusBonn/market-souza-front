@@ -16,7 +16,7 @@ function Parameters() {
       event.preventDefault();
   
       const formData = {
-        id: parseInt(codigo), // Converte para número inteiro
+        id: parseInt(codigo),
         name: nomeProduto
       };
   

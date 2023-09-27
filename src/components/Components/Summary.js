@@ -7,7 +7,6 @@ function Summary({ selecionados }) {
     return total.toFixed(2); // Arredonda para 2 casas decimais
   };  
   const handleConcluirVenda = async () => {
-        // Enviar a lista de objetos para o endpoint http://localhost:5000/sold
         try {
           const response = await fetch('http://localhost:5000/sold', {
             method: 'POST',
@@ -20,7 +19,6 @@ function Summary({ selecionados }) {
           if (response.ok) {
             console.log('Venda concluída com sucesso!');
             window.location.reload();
-            // Aqui você pode adicionar lógica adicional, como limpar a lista de selecionados, etc.
           } else {
             console.error('Erro ao concluir a venda.');
           }

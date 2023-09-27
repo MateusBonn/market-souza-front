@@ -8,7 +8,6 @@ import Container from './Container';
 function Navbar() {
     var cookie = new Cookies();
     const role = cookie.get('role');
-    console.log("Variavel login", role, "Sem variavel",cookie.get('role'), "tentando acessar role", )
     return (
     <nav className={styles.navbar}>
         <Container>

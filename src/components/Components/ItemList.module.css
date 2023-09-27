@@ -1,34 +1,41 @@
 .item_container {
-    display: grid; /* Usar um layout de grade */
-    grid-template-columns: repeat(4, 1fr); /* 3 colunas com largura flexível */
-    gap: 10px; /* Espaçamento entre as células */
-    list-style-type: none; /* Remova os pontos de início da lista */
-    padding: 10px; /* Adicione um espaço interno para os elementos */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px; 
+    list-style-type: none; 
+    padding: 10px; 
   }
   
   .item_container li {
-    border: 1px solid #ccc; /* Adicione borda 3D */
-    padding: 8px; /* Espaçamento interno dos elementos */
+    border: 1px solid #ccc; 
+    padding: 8px; 
   }
   .item_container p {
-    border: 1px solid #ccc; /* Adicione borda 3D */
-    padding: 8px; /* Espaçamento interno dos elementos */
+    border: 1px solid #ccc;
+    padding: 8px; 
   }
 
   .item_container_selected {
-    display: grid; /* Usar um layout de grade */
-    grid-template-columns: repeat(4, 1fr); /* 3 colunas com largura flexível */
-    gap: 10px; /* Espaçamento entre as células */
-    list-style-type: none; /* Remova os pontos de início da lista */
-    padding: 10px; /* Adicione um espaço interno para os elementos */
+    display: grid; 
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px; 
+    list-style-type: none; 
+    padding: 10px; 
   }
 
   .item_container_selected li {
-    border: 1px solid #2510dd; /* Adicione borda 3D */
-    padding: 8px; /* Espaçamento interno dos elementos */
+    border: 1px solid #2510dd; 
+    padding: 8px; 
   }
   .item_container_selected p {
-    border: 1px solid #2510dd; /* Adicione borda 3D */
-    padding: 8px; /* Espaçamento interno dos elementos */
+    border: 1px solid #2510dd;
+    padding: 8px;
   }
+
+  @media (max-width: 768px) {
+    .item_container,
+    .item_container_selected {
+        grid-template-columns: 1fr; 
+    }
+}
   

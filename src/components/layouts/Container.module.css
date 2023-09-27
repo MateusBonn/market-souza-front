@@ -18,3 +18,22 @@
     flex-direction: column;
     justify-content: flex-start ;
 }
+
+@media (max-width: 768px) {
+    .container {
+        width: 100%; /* Preenche toda a largura da tela */
+    }
+
+    .min-height {
+        min-height: auto; /* Remove a altura mínima */
+    }
+
+    .start {
+        justify-content: center; /* Centraliza o conteúdo verticalmente */
+    }
+
+    .column {
+        flex-direction: column;
+        align-items: center; /* Centraliza o conteúdo horizontalmente */
+    }
+}

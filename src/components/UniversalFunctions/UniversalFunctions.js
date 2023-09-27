@@ -28,10 +28,6 @@ export const setCookies = async(responseToken) => {
                     httpOnly: true,
                     expires: new Date(new Date().getTime() + 3600000),})
                     
-        console.log('Tokem recuperado', responseToken.status);
-
-        console.log('Atual', cookie.get('token'))
-
         api.defaults.headers.Authorization = `Bearer ${token.accessToken}`
     }
 

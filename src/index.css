@@ -9,3 +9,9 @@ html, body, #root {
   background-color: #efefef;
   height: 100%;
 }
+
+@media (max-width: 768px) {
+  html, body, #root {
+    height: auto;
+  }
+}
