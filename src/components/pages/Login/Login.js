@@ -19,7 +19,6 @@ function Login() {
     return (
     <div id="login">
         <h1 className="title">Faça seu login para iniciar!</h1>
-        <p>{String(authenticated)}</p>
         <form className="form" onSubmit={handleSubmit}>
             <div className="field">
                 <label htmlFor="username">Username</label>
