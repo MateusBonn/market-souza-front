@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import styles from './ItemList.module.css';
 
 function ItemList({ previsoes, selecionados, setSelectedItem, setShowValueModal }) {
