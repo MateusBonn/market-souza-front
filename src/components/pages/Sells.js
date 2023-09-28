@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import {getProductByCode, getProductByName } from '../services/api'
+import React, { useState, useEffect, useRef } from 'react';
+import {getProduct } from '../services/api'
 import ValueModal from '../../modals/ValueModal';
 import ItemList from '../Components/ItemList'
 import Summary from '../Components/Summary'
@@ -11,31 +11,35 @@ function Sells() {
   const [selecionados, setSelecionados] = useState([]);
   const [showValueModal, setShowValueModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     if (termo) {
-          getProductByCode(termo)
+          getProduct(termo)
           .then((response) => {
           console.log(response)
-            setPrevisoes(response.data)
+            setPrevisoes(response.data.content)
         }).catch((error) => {
-          getProductByName(termo)
-          .then((response) => {
-            console.log(response)
-              setPrevisoes(response.data)
-
-        })})
+          console.log(error)
+        })
     }else {
       setPrevisoes([]);
     }
   }, [termo]);
 
+  useEffect(() => {
+    if (!showValueModal && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [showValueModal]);
+
   const handleKeyPress = async event => {
     if (event.key === 'Enter') {
-      const itemSelecionado = previsoes.find(previsao => previsao.codeProduct === termo || previsao.nameProduct === termo);
+      const itemSelecionado = previsoes.find(previsao => previsao.codeProduct === termo || previsao.nameProduct === termo.toUpperCase() ) ;
+      console.log(itemSelecionado)
       if (itemSelecionado) {
 
-        if (itemSelecionado.priceProduct != null) {
+        if (itemSelecionado.priceProduct == null) {
           setSelectedItem(itemSelecionado);
           setShowValueModal(true);
         } else {
@@ -68,10 +72,12 @@ function Sells() {
       <p>Insira o código de barras</p>
       <input
         type="text"
+        ref={inputRef}
         value={termo}
         onChange={e => setTermo(e.target.value)}
         onKeyDown={handleKeyPress}
-        placeholder="Digite um código"
+        placeholder="Digite o código ou o nome do produto"
+        autoFocus
       />
       </div>
       <ItemList previsoes={previsoes} selecionados={selecionados} setSelectedItem={setSelectedItem} setShowValueModal={setShowValueModal} />

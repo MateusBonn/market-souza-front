@@ -4,7 +4,7 @@ import { AuthContext } from "../../../contexts/Auth";
 import './Login.css';
 
 function Login() {
-    const {authenticated, login } = useContext(AuthContext)
+    const {login } = useContext(AuthContext)
 
     const [username,setUsername] = useState("");
     const [password,setPassword] = useState("");

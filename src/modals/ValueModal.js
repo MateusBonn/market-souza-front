@@ -11,6 +11,13 @@ function ValueModal({ initialValue, onConfirm, onCancel }) {
     onConfirm(newValue);
   };
 
+  const handleConfirmEnter = async event => {
+    if (event.key === 'Enter') {
+      handleConfirm();
+    }
+    
+  };
+
   return (
     <div className="modal-overlay">
       <div className="modal-content">
@@ -20,6 +27,7 @@ function ValueModal({ initialValue, onConfirm, onCancel }) {
           type="number"
           value={newValue}
           onChange={handleInputChange}
+          onKeyDown={handleConfirmEnter}
           autoFocus
         />
         <div className="modal-actions">
